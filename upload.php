@@ -75,6 +75,7 @@ echo "<td>縮圖</td>";
 echo "<td>檔案名稱</td>";
 echo "<td>檔案類型</td>";
 echo "<td>檔案說明</td>";
+echo "<td>下載</td>";
 foreach($rows as $row){
 
     echo "<tr>";
@@ -89,6 +90,7 @@ foreach($rows as $row){
     echo "<td>{$row['name']}</td>";
     echo "<td>{$row['type']}</td>";
     echo "<td>{$row['note']}</td>";
+    echo "<td><a href='{$row['path']}' download>下載</a></td>";
 
     echo "</tr>";
 }
