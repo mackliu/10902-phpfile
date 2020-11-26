@@ -27,6 +27,7 @@ include_once "base.php";
 
      print_r($row);
      save("upload",$row);
+     to('manage.php');
  }
 
 ?>
@@ -40,13 +41,14 @@ include_once "base.php";
     <title>檔案上傳</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        table{
+        form{
             border:3px solid blue;
-            border-collapse:collapse;
+            margin:auto;
+            padding:20px;
+            width:300px;
         }
-        td{
-            border:1px solid #999;
-            padding:5px; 
+        form div{
+            margin:5px 0;
         }
     </style>
 </head>
@@ -68,36 +70,7 @@ include_once "base.php";
 
 
 <!----建立一個連結來查看上傳後的圖檔---->  
-<?php
-$rows=all('upload');
-echo "<table>";
-echo "<td>縮圖</td>";
-echo "<td>檔案名稱</td>";
-echo "<td>檔案類型</td>";
-echo "<td>檔案說明</td>";
-echo "<td>下載</td>";
-foreach($rows as $row){
 
-    echo "<tr>";
-
-    if($row['type']=='圖檔'){
-        echo "<td><img src='{$row['path']}' style='width:100px'></td>";
-        
-    }else{
-        echo "<td><img src='./img/file_icon.png' style='width:20px'></td>";
-
-    }
-    echo "<td>{$row['name']}</td>";
-    echo "<td>{$row['type']}</td>";
-    echo "<td>{$row['note']}</td>";
-    echo "<td><a href='{$row['path']}' download>下載</a></td>";
-
-    echo "</tr>";
-}
-echo "</table>";
-
-
-?>
 
 </body>
 </html>
