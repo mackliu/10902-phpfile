@@ -15,16 +15,23 @@ if(!empty($_FILES['txt']['tmp_name'])){
     move_uploaded_file($_FILES['txt']['tmp_name'],"./upload/".$_FILES['txt']['name']);
 
     $file=fopen("./upload/".$_FILES['txt']['name'],'r');
-    $line=fgets($file);
-    echo $line;
-    $line=explode(",",$line);
-    $data=[
-        'name'=>$line[1],
-        'age'=>$line[2],
-        'birthday'=>$line[3],
-        'addr'=>$line[4],
-    ];
-    save('students',$data);
+    $num=0;
+    while(!feof($file)){
+        $line=fgets($file);
+        if($num!=0){
+            $line=explode(",",$line);
+            $data=[
+                'name'=>$line[1],
+                'age'=>$line[2],
+                'birthday'=>$line[3],
+                'addr'=>$line[4],
+            ];
+            save('students',$data);
+        }
+        $num++;
+    }
+
+
 
 }
 
