@@ -16,6 +16,7 @@
     echo "大小:".round($_FILES['photo']['size']/1024)."kb<br>";
     move_uploaded_file($_FILES['photo']['tmp_name'],'./img/'.$_FILES['photo']['name']);
     $filename="./img/".$_FILES['photo']['name'];
+
     $src_info=[
         'width'=>0,
         'height'=>0,
@@ -41,10 +42,19 @@
     }
     $src_info['width']=imagesx($src_img);
     $src_info['height']=imagesy($src_img);
+    $src_info['rate']=imagesy($src_img)/imagesx($src_img);
+    if($src_info['rate']<=1){
+        $src_info['direction']='橫向';
+    }else{
+        $src_info['direction']='直向';
+    }
 
     $dst_img=imagecreatetruecolor(200,200);
     $dst_info['width']=200;
     $dst_info['height']=200;
+
+    $white=imagecolorallocate($dst_img,255,255,255);
+    imagefill($dst_img,0,0,$white);
  }
 
 
@@ -56,6 +66,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>圖形處理練習</title>
+    <style>
+        div{
+            width:500px;
+            margin:10px auto;
+            text-align:center;
+        }
+    </style>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -77,7 +94,22 @@
 
 if(isset($src_img) && isset($dst_img)){
 
-    imagecopyresampled($dst_img,$src_img,0,0,0,0,$dst_info['width'],$dst_info['height'],$src_info['width'],$src_info['height']);
+    if($src_info['direction']=='橫向'){
+
+        $dst_height=$dst_info['height']*$src_info['rate'];
+        $dst_width=$dst_info['width'];
+        $dst_y=($dst_info['height']-$dst_height)/2;
+        $dst_x=0;
+        
+    }else{
+        $dst_height=$dst_info['height'];
+        $dst_width=$dst_info['width']*(1/$src_info['rate']);
+        $dst_y=0;
+        $dst_x=($dst_info['width']-$dst_width)/2;
+
+    }
+    
+    imagecopyresampled($dst_img,$src_img,$dst_x,$dst_y,0,0,$dst_width,$dst_height,$src_info['width'],$src_info['height']);
     $dst_path="./dst/".$_FILES['photo']['name'];
     imagejpeg($dst_img,$dst_path);
 
