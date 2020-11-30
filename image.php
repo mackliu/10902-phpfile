@@ -54,6 +54,7 @@
     $dst_info['height']=200;
 
     $white=imagecolorallocate($dst_img,255,255,255);
+    $red=imagecolorallocate($dst_img,255,0,0);
     imagefill($dst_img,0,0,$white);
  }
 
@@ -118,11 +119,68 @@ if(isset($src_img) && isset($dst_img)){
     echo "</div>";
 
 }
-
+imagedestroy($dst_img);
 
 ?>
-<!----圖形加邊框----->
+<h3>圖形加邊框</h3>
+<hr>
 
+<!----圖形加邊框----->
+<?php
+    $dst_img=imagecreatetruecolor(200,200);
+    $dst_info['width']=200;
+    $dst_info['height']=200;
+
+    imagefill($dst_img,0,0,$red);
+$border=5;
+$padding=10;
+if($src_info['direction']=='橫向'){
+    $bor_width=($dst_info['width']-$padding*2);
+    $bor_height=($dst_info['height']-$padding*2)*$src_info['rate'];
+    $dst_y=10+((($dst_info['height']-$padding*2)-$bor_height)/2);
+    $dst_x=10;
+
+}else{
+    $bor_width=($dst_info['width']-$padding*2)*(1/$src_info['rate']);
+    $bor_height=($dst_info['height']-$padding*2);
+    $dst_y=10;
+    $dst_x=10+((($dst_info['width']-$padding*2)-$bor_width)/2);
+}
+echo "width:".$bor_width."<br>";
+echo "height:".$bor_height."<br>";
+echo "x:".$dst_x."<br>";
+echo "y:".$dst_y."<br>";
+
+//壓底層框線
+$img_bor=imagecreatetruecolor($bor_width,$bor_height);
+imagefill($img_bor,0,0,$white);
+imagecopyresampled($dst_img,$img_bor,$dst_x,$dst_y,0,0,$bor_width,$bor_height,$bor_width,$bor_height);
+
+if($src_info['direction']=='橫向'){
+    $dst_height=($dst_info['height']-$padding*2-$border*2)*$src_info['rate'];
+    $dst_width=($dst_info['width']-$padding*2-$border*2);
+    $dst_y=($dst_info['height']-$dst_height)/2;
+    $dst_x=$padding+$border;
+    
+}else{
+    $dst_height=($dst_info['height']-$padding*2-$border*2);
+    $dst_width=($dst_info['width']-$padding*2-$border*2)*(1/$src_info['rate']);
+    $dst_y=$padding+$border;
+    $dst_x=($dst_info['width']-$dst_width)/2;
+
+}
+
+imagecopyresampled($dst_img,$src_img,$dst_x,$dst_y,0,0,$dst_width,$dst_height,$src_info['width'],$src_info['height']);
+
+
+$dst_path="./dst/bor_".$_FILES['photo']['name'];
+imagejpeg($dst_img,$dst_path);
+
+echo "<div>";
+echo "<img src='$dst_path'>";
+echo "</div>";
+
+?>
 
 <!----產生圖形驗證碼----->
 
