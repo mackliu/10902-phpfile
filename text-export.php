@@ -12,11 +12,19 @@ include_once "base.php";
 
 if(!empty($_GET['do']) && $_GET['do']=='download'){
     $rows=all("students");
+    $file=fopen('download.csv',"w+");
+    //寫入BOM檔頭
+    $utf8_with_bom = chr(239) . chr(187) . chr(191);
+    fwrite($file,$utf8_with_bom);
     foreach($rows as $row){
         $line=implode(',',[$row['id'],$row['name'],$row['age'],$row['birthday'],$row['addr']]);
-        echo $line . "<br>";
+        fwrite($file,$line);
+        echo $line . "-已寫入<br>";
     }
 
+    fclose($file);
+
+    $filename="download.csv";
 }
 ?>
 <!DOCTYPE html>
@@ -58,6 +66,11 @@ if(!empty($_GET['do']) && $_GET['do']=='download'){
 
 $rows=all('students');
 
+if(isset($filename)){
+?>
+<a href='download.csv' download>~可以下載囉~</a>
+<?php
+}
 ?>
 <table>
     <tr>
