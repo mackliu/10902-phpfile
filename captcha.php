@@ -31,22 +31,27 @@
 <?php
 $str=captcha(4);
 $img=cpatchapic($str);
-
-if($_POST['ans']){
+session_start();
+if(isset($_POST['ans'])){
     echo "你輸入的驗證碼為:".$_POST['ans'];
     echo "<br>";
     echo "要比對的驗證碼內容為:".$str;
-    if($str==$_POST['ans']){
+    echo "<br>";
+    echo "原始的驗證碼內容為:".$_POST['src'];
+    if($_POST['ans']==$_SESSION['ans']){
         echo "你輸入的驗證碼正確";
     }else{        
         echo "你輸入的驗證碼錯誤";
     }
 }
 
+$_SESSION['ans']=$str;
+
 ?>
 <form action="?" method="post">
     <?="<img src='$img'>";?>
     <input type="text" name="ans" >
+    <input type="hidden" name="src" value="<?=$str;?>">
     <input type="submit" value="送出">
 </form>
 
